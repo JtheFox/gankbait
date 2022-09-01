@@ -15,5 +15,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(routes);
 
 app.listen(port, function () {
-  console.log('Now listening at ' + process.env.NODE_ENV === 'production' ? `port ${port}` : `http://localhost:${port}`);
+  console.log('Now listening at', process.env.NODE_ENV === 'production' ? `port ${port}` : `http://localhost:${port}`);
 });
