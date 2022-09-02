@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
 router.get('/login', async (req, res) => {
   try {
     const { code } = req.query;
-    if (!code) return res.status(401).json({ message: 'Invalid authorization' });
+    if (!code) return res.sendStatus(401)
 
     const tokenResponseData = await axios.post(
       'https://discord.com/api/oauth2/token',
@@ -27,15 +27,13 @@ router.get('/login', async (req, res) => {
     );
 
     const { data } = tokenResponseData;
-    const userResult = await axios.get('https://discord.com/api/users/@me', {
+    const user = await axios.get('https://discord.com/api/users/@me', {
       headers: {
         authorization: `${data.token_type} ${data.access_token}`,
       },
     });
 
-    console.log(userResult.data);
-
-    const token = generateToken(userResult.data.id);
+    const token = generateToken(user.data);
 
     return res
       .cookie('access_token', token, {
@@ -57,7 +55,7 @@ router.get('/logout', authenticateToken, (req, res) => {
 });
 
 router.get('/games', authenticateToken, (req, res) => {
-  console.log(req.userId);
+  console.log(req.userData);
   res.sendStatus(200)
 });
 
