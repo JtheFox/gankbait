@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const routes = require('./routes');
@@ -9,6 +10,7 @@ const port = process.env.PORT || 3000;
 app.set('views', './views');
 app.set('view engine', 'pug');
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
