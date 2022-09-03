@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 const { generateToken, authenticateToken, checkToken } = require('../utils/auth');
+const { User } = require('../models');
 
 router.get('/', checkToken, async (req, res) => {
   if (!req.userData) return res.render('index', { loggedIn: false });
@@ -41,8 +42,14 @@ router.get('/login', checkToken, async (req, res) => {
         authorization: `${data.token_type} ${data.access_token}`,
       },
     });
-
     const token = generateToken(user.data);
+
+    try {
+      await User.create({ "id": user.data.id });
+      console.log('New user has logged in');
+    } catch {
+      console.log('Existing user has logged in');
+    }
 
     return res
       .cookie('access_token', token, {
@@ -65,7 +72,7 @@ router.get('/logout', authenticateToken, (req, res) => {
 
 router.get('/dashboard', authenticateToken, (req, res) => {
   console.log(req.userData);
-  res.sendStatus(200)
+  return res.sendStatus(200)
 });
 
 router.get('*', (req, res) => res.redirect('/'));
