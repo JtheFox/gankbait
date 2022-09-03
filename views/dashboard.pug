@@ -1,18 +1,17 @@
 extends layouts/layout.pug
 
 block content
-  div(class="content")
-    div(class="field is-grouped")
-      div(class="field")
-        label(class="label" id="summoner-name" data-name=user.summonerName data-id=user.summonerId) Summoner Name:
+  div(class="level")
+    div(class="level-item")
+      div(class="field is-grouped")
         div(class="control")
+          label(class="label" id="summoner-name" data-name=user.summonerName required) Summoner Name:
           input(class="input" id="name-input" type="text" placeholder="Summoner Name")
-        p(class="help is-success" id="form-status")
-      div(class="field")
-        label(class="label" id="summoner-region") Region
+          p(class="help is-success" id="form-status")
         div(class="control")
+          label(class="label") Region
           div(class="select")
-            select
+            select(id="region-input")
               option(value="na1") NA
               option(value="kr") KR
               option(value="euw1") EUW
@@ -20,7 +19,7 @@ block content
               option(value="oc1") OCE 
               option(value="jp1") JP
               option(value="br1") BR
-      div(class="field")
         div(class="control")
-          button(class="button is-primary") Update
+          label(class="label") &nbsp;
+          button(class="button is-primary" id="form-submit") Update
   script(src="/dashboard.js") 

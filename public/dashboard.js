@@ -1,9 +1,12 @@
 const formStatus = $('#form-status');
 const nameInput = $('#name-input');
+const regionInput = $('#region-input');
+const formSubmitBtn = $('#form-submit');
 
-const toggleForm = (state) => {
+const toggleForm = (state = null) => {
   formStatus.classList.remove('is-success', 'is-danger');
   nameInput.classList.remove('is-success', 'is-danger');
+  formStatus.textContent = '';
   switch (state) {
     case 'success':
       formStatus.classList.add('is-success');
@@ -20,10 +23,13 @@ const toggleForm = (state) => {
   }
 }
 
-const handleFormSuccess = () => {
-  toggleForm('success');
-}
+onClick(formSubmitBtn, async () => {
+  toggleForm();
+  if (!nameInput.value.length) toggleForm('fail');
 
-const handleFormFail = () => {
-    toggleForm('fail');
-}
+  const body = {
+    name: nameInput.value,
+    region: regionInput.value
+  }
+  console.log(body)
+});

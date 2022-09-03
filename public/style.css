@@ -10,7 +10,21 @@ main {
   flex: 1;
 }
 
+/* Layout */
+main > * {
+  padding-top: 2rem;
+}
+
+.avatar {
+  max-height: 28px;
+  max-width: 28px;
+}
+
 /* Dashboard */
 #summoner-name::after {
   content: attr(data-name)
+}
+
+#name-input {
+  width: 400px;
 }
