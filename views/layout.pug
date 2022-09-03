@@ -1,0 +1,17 @@
+html
+  head
+    style(src="/style.css")
+  body
+    block head 
+      header
+        h1 Gankbait 
+        if loggedIn 
+          img(src=user.avatar, alt="", srcset="")
+          p= user.username
+          a(href='/logout') Logout 
+        else 
+          a(href='https://discord.com/api/oauth2/authorize?client_id=869983919578173482&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin&response_type=code&scope=identify') Login
+    block content 
+    block foot
+      footer
+        p &copy; 2022 Jason Fox

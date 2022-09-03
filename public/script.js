@@ -6,4 +6,5 @@ const oauthURL = 'https://discord.com/api/oauth2/authorize?client_id=86998391957
 window.onload = async () => {
 };
 
-onClick($('#login'), () => location.replace(oauthURL));
+if ($('#login')) onClick($('#login'), () => location.replace(oauthURL));
+else onClick($('#logout'), () => location.replace('/logout'));

@@ -1,12 +1,22 @@
 const router = require('express').Router();
 const axios = require('axios');
-const { generateToken, authenticateToken } = require('../utils/auth');
+const { generateToken, authenticateToken, checkToken } = require('../utils/auth');
 
-router.get('/', async (req, res) => {
-  res.render('index');
+router.get('/', checkToken, async (req, res) => {
+  if (!req.userData) return res.render('index', { loggedIn: false });
+  const { id, username, avatar } = req.userData;
+  const user = {
+    id,
+    username,
+    avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`
+  }
+  console.log(user)
+  return res.render('index', { user, loggedIn: true });
 });
 
-router.get('/login', async (req, res) => {
+router.get('/login', checkToken, async (req, res) => {
+  if (req.userData) return res.redirect('/dashboard')
+
   try {
     const { code } = req.query;
     if (!code) return res.sendStatus(401)
@@ -51,10 +61,10 @@ router.get('/logout', authenticateToken, (req, res) => {
   return res
     .clearCookie('access_token')
     .status(200)
-    .json({ message: 'Successfully logged out' });
+    .redirect('/')
 });
 
-router.get('/games', authenticateToken, (req, res) => {
+router.get('/dashboard', authenticateToken, (req, res) => {
   console.log(req.userData);
   res.sendStatus(200)
 });

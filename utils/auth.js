@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = ({ userId, username, avatar }) => jwt.sign({ userId, username, avatar }, process.env.TOKEN_SECRET);
+const generateToken = ({ id, username, avatar }) => jwt.sign({ id, username, avatar }, process.env.TOKEN_SECRET);
 
 const authenticateToken = (req, res, next) => {
   const token = req.cookies.access_token;
@@ -15,4 +15,16 @@ const authenticateToken = (req, res, next) => {
   }
 }
 
-module.exports = { generateToken, authenticateToken };
+const checkToken = (req, res, next) => {
+  const token = req.cookies.access_token;
+  if (token) {
+    try {
+      req.userData = jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  return next();
+}
+
+module.exports = { generateToken, authenticateToken, checkToken };
