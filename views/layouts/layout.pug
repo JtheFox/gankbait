@@ -1,0 +1,24 @@
+html
+  head
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css")
+    link(rel="stylesheet", href="/style.css")
+  body
+    block head 
+      header(class="navbar px-4 py-2")
+        .navbar-brand
+          h1(class="title is-2") Gankbait 
+        .navbar-end
+          if loggedIn 
+            .navbar-item
+              figure(class="image is-28x28 mr-1")
+                img(class="is-rounded" src=user.avatar alt="Discord Avatar")
+              p= user.username
+          .buttons
+            if loggedIn
+              a(class="button is-danger" href="/logout") Logout 
+            else 
+              a(class="button is-light" href="https://discord.com/api/oauth2/authorize?client_id=869983919578173482&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin&response_type=code&scope=identify") Login
+    block content 
+    block foot
+      footer
+        p &copy; 2022 Jason Fox

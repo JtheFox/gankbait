@@ -10,7 +10,6 @@ router.get('/', checkToken, async (req, res) => {
     username,
     avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`
   }
-  console.log(user)
   return res.render('index', { user, loggedIn: true });
 });
 
