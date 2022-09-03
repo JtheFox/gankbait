@@ -10,6 +10,7 @@ main {
   flex: 1;
 }
 
-#login {
-  display: none;
+/* Dashboard */
+#summoner-name::after {
+  content: attr(data-name)
 }

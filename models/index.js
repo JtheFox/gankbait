@@ -7,6 +7,7 @@ const UserSchema = new dynamoose.Schema({
   },
   "summonerName": String,
   "summonerId": String,
+  "region": String,
 });
 
 const User = dynamoose.model("GbUser", UserSchema);

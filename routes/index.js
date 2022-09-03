@@ -6,16 +6,17 @@ const { User } = require('../models');
 router.get('/', checkToken, async (req, res) => {
   if (!req.userData) return res.render('index', { loggedIn: false });
   const { id, username, avatar } = req.userData;
+  const dbUser = await User.get({ id });
   const user = {
-    id,
+    ...dbUser,
     username,
-    avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`
+    avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`,
   }
-  return res.render('index', { user, loggedIn: true });
+  return res.render('dashboard', { user, loggedIn: true });
 });
 
 router.get('/login', checkToken, async (req, res) => {
-  if (req.userData) return res.redirect('/dashboard')
+  if (req.userData) return res.redirect('/')
 
   try {
     const { code } = req.query;
@@ -68,11 +69,6 @@ router.get('/logout', authenticateToken, (req, res) => {
     .clearCookie('access_token')
     .status(200)
     .redirect('/')
-});
-
-router.get('/dashboard', authenticateToken, (req, res) => {
-  console.log(req.userData);
-  return res.sendStatus(200)
 });
 
 router.get('*', (req, res) => res.redirect('/'));

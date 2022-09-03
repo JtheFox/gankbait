@@ -1,6 +1,26 @@
 extends layouts/layout.pug
 
 block content
-  button#login Login
-  
+  div(class="content")
+    div(class="field is-grouped")
+      div(class="field")
+        label(class="label" id="summoner-name" data-name=user.summonerName data-id=user.summonerId) Summoner Name:
+        div(class="control")
+          input(class="input" id="name-input" type="text" placeholder="Summoner Name")
+        p(class="help is-success" id="form-status")
+      div(class="field")
+        label(class="label" id="summoner-region") Region
+        div(class="control")
+          div(class="select")
+            select
+              option(value="na1") NA
+              option(value="kr") KR
+              option(value="euw1") EUW
+              option(value="eun1") EUNE
+              option(value="oc1") OCE 
+              option(value="jp1") JP
+              option(value="br1") BR
+      div(class="field")
+        div(class="control")
+          button(class="button is-primary") Update
   script(src="/dashboard.js") 

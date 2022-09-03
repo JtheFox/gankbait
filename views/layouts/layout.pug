@@ -12,15 +12,15 @@ html
           h1(class="title is-2") Gankbait 
         .navbar-end
           if loggedIn 
-            .navbar-item
-              figure(class="image is-28x28 mr-1")
+            div(class="navbar-item mr-2")
+              figure(class="image is-28x28 mr-2")
                 img(class="is-rounded" src=user.avatar alt="Discord Avatar")
               p= user.username
           .buttons
             if loggedIn
               a(class="button is-danger" href="/logout") Logout 
             else 
-              a(class="button is-light" href="https://discord.com/api/oauth2/authorize?client_id=869983919578173482&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin&response_type=code&scope=identify") Login
+              a(class="button is-dark" href="https://discord.com/api/oauth2/authorize?client_id=869983919578173482&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin&response_type=code&scope=identify") Login
     main
       block content 
     block foot
