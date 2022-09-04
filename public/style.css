@@ -21,10 +21,6 @@ main > * {
 }
 
 /* Dashboard */
-#summoner-name::after {
-  content: attr(data-name)
-}
-
 #name-input {
   width: 400px;
 }

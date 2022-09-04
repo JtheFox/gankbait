@@ -5,7 +5,7 @@ block content
     div(class="level-item")
       div(class="field is-grouped")
         div(class="control")
-          label(class="label" id="summoner-name" data-name=user.summonerName required) Summoner Name:
+          label(class="label") Summoner Name:&nbsp;#[span(class="has-text-weight-semibold" id="summoner-name") !{user.summonerName}]
           input(class="input" id="name-input" type="text" placeholder="Summoner Name")
           p(class="help is-success" id="form-status")
         div(class="control")

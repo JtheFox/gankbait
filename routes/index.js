@@ -3,6 +3,9 @@ const axios = require('axios');
 const { generateToken, authenticateToken, checkToken } = require('../utils/auth');
 const { User } = require('../models');
 
+const apiRoutes = require('./api');
+router.use('/api', apiRoutes);
+
 router.get('/', checkToken, async (req, res) => {
   if (!req.userData) return res.render('index', { loggedIn: false });
   const { id, username, avatar } = req.userData;
