@@ -15,7 +15,8 @@ router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
     await User.update({
       id,
       summonerName: data.name,
-      summonerId: data.puuid,
+      summonerId: data.id,
+      summonerPuuid: data.puuid,
       region
     });
     return res.status(200).json({ name: data.name });

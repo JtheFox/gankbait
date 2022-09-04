@@ -7,6 +7,7 @@ const UserSchema = new dynamoose.Schema({
   },
   "summonerName": String,
   "summonerId": String,
+  "summonerPuuid": String,
   "region": String,
 });
 
