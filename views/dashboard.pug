@@ -21,9 +21,36 @@ block content
               option(value="br1") BR
         div(class="control")
           label(class="label") &nbsp;
-          button(class="button is-primary" id="form-submit") Update
+          button(class="button is-success" id="form-submit") Update
 
-  div(class="level")
-    button(id="results" class="button is-primary") Go
+  section.has-text-centered
+    .level
+      .level-item
+        h3.title Your Stats #{user.summonerName && `(${user.summonerName})`}
+        if user.summonerId
+          button(class="button is-warning is-light ml-4") Refresh
+
+    mixin stats(s, role)
+      article#stats
+        h4(class="title is-4") In #{role}
+        div.level
+          div.level-item
+            div
+              p.heading Games
+              p(class="title is-3")= s.games
+          div.level-item
+            div
+              p.heading Kills From Enemy Ganks
+              p(class="title is-3")= s.games > 0 ? s.killsFromGanks : "N/A" 
+          div.level-item
+            div
+              p.heading Deaths From Enemy Ganks
+              p(class="title is-3")= s.games > 0 ? s.deathsFromGanks : "N/A" 
+    if stats
+      +stats(stats.lane, 'Lane')
+      +stats(stats.jungle, 'Jungle')
+    else 
+      h4(class="title is-4") No matches analyzed! 
+      h5.subtitle Set your summoner name to get started.      
 
   script(src="/dashboard.js") 
