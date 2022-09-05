@@ -54,7 +54,6 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
     const matchResults = [];
     for await (const id of matchIds.data) {
       console.log(`Evaluating match ${matchIds.data.indexOf(id) + 1} of ${matchIds.data.length}`);
-      console.log(id)
       const currMatch = await axios.get(apiURL + id, rgapiAxiosConfig);
       const currTeams = await parseMatchData(currMatch.data, summonerId);
       matchTeams.push(currTeams);
@@ -62,8 +61,6 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
       const currResults = parseTimelineData(currTimeline.data, currTeams);
       matchResults.push(currResults)
     }
-
-    console.log('Data', matchTeams, matchResults);
 
     const laneResults = matchResults.filter(({ jungle }) => !jungle);
     const jungleResults = matchResults.filter(({ jungle }) => jungle);
@@ -81,9 +78,14 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
       }
     }
 
-    res.json(stats);
+    console.log('Caching results');
+    delete dbUser.id
+    await User.update({ id }, { ...dbUser, stats });
+    console.log('Analysis complete for', summonerName);
+
+    res.status(200).redirect('/');
   } catch (err) {
-    console.error(err?.path);
+    console.error(err.stack || err);
     res.status(500);
   }
 });

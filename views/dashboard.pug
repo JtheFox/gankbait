@@ -28,7 +28,7 @@ block content
       .level-item
         h3.title Your Stats #{user.summonerName && `(${user.summonerName})`}
         if user.summonerId
-          button(class="button is-warning is-light ml-4") Refresh
+          button(class="button is-warning is-light ml-4" id="btn-update") Refresh
 
     mixin stats(s, role)
       article#stats
@@ -46,9 +46,11 @@ block content
             div
               p.heading Deaths From Enemy Ganks
               p(class="title is-3")= s.games > 0 ? s.deathsFromGanks : "N/A" 
-    if stats
-      +stats(stats.lane, 'Lane')
-      +stats(stats.jungle, 'Jungle')
+    if user.stats
+      .stats-container
+        +stats(user.stats.lane, 'Lane')
+        .block &nbsp;
+        +stats(user.stats.jungle, 'Jungle')
     else 
       h4(class="title is-4") No matches analyzed! 
       h5.subtitle Set your summoner name to get started.      

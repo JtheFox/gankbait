@@ -25,6 +25,10 @@ const toggleForm = (state = null) => {
   }
 }
 
+const getStats = async () => {
+  await fetch('/api/matches');
+}
+
 onClick(formSubmitBtn, async () => {
   toggleForm();
   if (!nameInput.value.length) toggleForm('fail');
@@ -47,11 +51,8 @@ onClick(formSubmitBtn, async () => {
     const summoner = await res.json();
     toggleForm('success');
     nameLabel.textContent = summoner.name;
+    await fetch('/api/matches');
   } else toggleForm('fail');
 });
 
-onClick($('#results'), async () => {
-  const res = await fetch('/api/matches');
-  const data = await res.json();
-  console.log('Results:', data)
-});
+onClick($('#btn-update'), async () => await fetch('/api/matches'));
