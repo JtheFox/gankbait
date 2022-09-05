@@ -1,4 +1,5 @@
 const dd = require('./ddrag');
+const pointIn = require('point-in-polygon');
 
 const parseMatchData = async ({ info }, summonerId) => {
   const teams = {
@@ -142,6 +143,7 @@ const parseTimelineData = ({ info }, teams) => {
     .map(kill => deathTeam(kill))
 
   return {
+    jungler: origin.lane === 'JGL',
     killsFromGanks: kills.filter(k => k === 1).length,
     deathsFromGanks: kills.filter(k => k === 0).length
   }

@@ -2,7 +2,7 @@ const formStatus = $('#form-status');
 const nameInput = $('#name-input');
 const regionInput = $('#region-input');
 const formSubmitBtn = $('#form-submit');
-const nameLabel = $('#summoner-name')
+const nameLabel = $('#summoner-name');
 
 const toggleForm = (state = null) => {
   formStatus.classList.remove('is-success', 'is-danger');
@@ -48,4 +48,10 @@ onClick(formSubmitBtn, async () => {
     toggleForm('success');
     nameLabel.textContent = summoner.name;
   } else toggleForm('fail');
+});
+
+onClick($('#results'), async () => {
+  const res = await fetch('/api/matches');
+  const data = await res.json();
+  console.log('Results:', data)
 });
