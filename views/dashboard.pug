@@ -27,10 +27,10 @@ block content
     .level
       .level-item
         if user.summonerId
-          h3.title Stats for #[span#stats-owner= user.summonerName]
+          h3.title#stats-title Stats for #[span#stats-owner= user.summonerName]
           button(class="button is-warning is-light ml-4" id="btn-update") Refresh
         else 
-          h3.title No Summoner Set
+          h3.title#stats-title No Summoner Set #[span#stats-owner]
 
     mixin stats(s, role)
       - const val = (v) => s.games > 0 ? v : 'N/A';
@@ -78,4 +78,4 @@ block content
       h4(class="title is-4 mt-6") Uh oh! Looks like the request failed
       p.subtitle #[span(class="has-background-danger-light has-text-danger-dark px-1") The server encountered an error processing the request or the request timed out]<br>Try clicking the #[span.has-text-warning-dark Refresh] button.
 
-  script(src="/dashboard.js") 
+  script(src="/index.js") 

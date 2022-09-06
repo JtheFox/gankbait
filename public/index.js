@@ -78,7 +78,8 @@ onClick(formSubmitBtn, async () => {
   if (res.ok) {
     const summoner = await res.json();
     toggleForm('success');
-    nameLabel.textContent = statsOwner.textContent = summoner.name;
+    nameLabel.textContent = summoner.name;
+    $('#stats-title').textContent = 'Stats for ' + summoner.name
     toggleStats('loading');
     getStats();
   } else toggleForm('fail');
