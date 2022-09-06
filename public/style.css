@@ -23,6 +23,16 @@ a:hover {
   color: hsl(348, 95%, 15%)
 }
 
+hr {
+  margin: 1.5rem auto;
+  width: 65%;
+  opacity: 50%;
+}
+
+span[class^="has-background"] {
+  border-radius: 0.3rem;
+}
+
 /* Layout */
 main > * {
   padding-top: 2rem;
@@ -36,6 +46,21 @@ main > * {
 /* Dashboard */
 #name-input {
   width: 400px;
+}
+
+/* Gank KDA */
+.kda::after {
+  content: attr(data-value);
+}
+
+.kda[data-rel='pos']::after {
+  content: '+' attr(data-value);
+  color: green;
+}
+
+.kda[data-rel='neg']::after {
+  content: '-' attr(data-value);
+  color: red;
 }
 
 /* Spinner */

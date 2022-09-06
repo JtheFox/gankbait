@@ -26,31 +26,40 @@ block content
   section.has-text-centered
     .level
       .level-item
-        h3.title Your Stats #{user.summonerName && `(${user.summonerName})`}
         if user.summonerId
+          h3.title Stats for #[span#stats-owner= user.summonerName]
           button(class="button is-warning is-light ml-4" id="btn-update") Refresh
+        else 
+          h3.title No Summoner Set
 
     mixin stats(s, role)
-      article.stats
+      - const val = (v) => s.games > 0 ? v : 'N/A';
+      - const avg = (v, p = 1) => val(Number.parseFloat(v).toFixed(p));
+      - const kda = s.killsFromGanks / s.deathsFromGanks;
+      - const dif = avg(kda - 1, 2);
+      article.container
         h4(class="title is-4") In #{role}
-        div.level
-          div.level-item
-            div
-              p.heading Games
-              p(class="title is-3")= s.games
-          div.level-item
-            div
-              p.heading Kills From Enemy Ganks
-              p(class="title is-3")= s.games > 0 ? s.killsFromGanks : "N/A" 
-          div.level-item
-            div
-              p.heading Deaths From Enemy Ganks
-              p(class="title is-3")= s.games > 0 ? s.deathsFromGanks : "N/A" 
-              //- TODO: Fix alignment
+        div(class="columns")
+          .column
+            p.heading Games
+            p(class="title is-3 mb-2")= s.games
+            p.heading= `${Math.round((s.games / 20) * 100)}%`
+          .column
+            p.heading= role.toLowerCase() === 'jungle' ? 'Ganks resulting in kills' : 'Kills from enemy ganks'
+            p(class="title is-3 mb-2")= val(s.killsFromGanks) 
+            p.heading Avg !{avg(s.killsFromGanks / s.games)}
+          .column
+            p.heading= role.toLowerCase() === 'jungle' ? 'Ganks resulting in deaths' : 'Deaths from enemy ganks'
+            p(class="title is-3 mb-2")= val(s.deathsFromGanks) 
+            p.heading Avg !{avg(s.deathsFromGanks / s.games)}
+          .column
+            p.heading= 'Gank KDA'
+            p(class="title is-3 mb-2")= avg(kda, 2)
+            p(class="heading kda" data-value=dif data-rel=(kda > 0 ? 'pos' : kda < 0 ? 'neg' : null))
     #stats-container
       if user.stats
         +stats(user.stats.lane, 'Lane')
-        .block &nbsp;
+        hr
         +stats(user.stats.jungle, 'Jungle')
       else 
         h4(class="title is-4") No matches analyzed! 
@@ -63,9 +72,10 @@ block content
         div
         div
       h4(class="title is-4 mt-6") Analyzing your last 20 ranked games 
-      h5.subtitle #[span(class="has-background-warning-light has-text-black") Warning: Navigating away from the page will cancel this process]
+      h5.subtitle #[span(class="has-background-warning-light has-text-warning-dark px-1") Warning: Navigating away from the page will cancel this process]
 
-    //- TODO: Add stats error message for failed requests
     div(class="mt-6 pt-4" id="stats-error" style="display:none")
+      h4(class="title is-4 mt-6") Uh oh! Looks like the request failed
+      p.subtitle #[span(class="has-background-danger-light has-text-danger-dark px-1") The server encountered an error processing the request or the request timed out]<br>Try clicking the #[span.has-text-warning-dark Refresh] button.
 
   script(src="/dashboard.js") 

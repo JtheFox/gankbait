@@ -6,14 +6,10 @@ const nameLabel = $('#summoner-name');
 const statsDisplay = $('#stats-container');
 const statsLoader = $('#stats-loader');
 const statsError = $('#stats-error');
+const statsOwner = $('#stats-owner');
 
 const toggleStats = (state = null) => {
   switch (state) {
-    case 'display':
-      statsDisplay.style.display = 'block';
-      statsLoader.style.display = 'none';
-      statsError.style.display = 'none';
-      break;
     case 'loading':
       statsDisplay.style.display = 'none';
       statsLoader.style.display = 'block';
@@ -24,7 +20,11 @@ const toggleStats = (state = null) => {
       statsLoader.style.display = 'none';
       statsError.style.display = 'block';
       break;
-    default: break;
+    default:
+      statsDisplay.style.display = 'block';
+      statsLoader.style.display = 'none';
+      statsError.style.display = 'none';
+      break;
   }
 }
 
@@ -49,13 +49,11 @@ const toggleForm = (state = null) => {
   }
 }
 
-// TODO: Add api request timeout
 const getStats = async () => {
   toggleStats('loading');
   const res = await fetch('/api/matches');
   if (res.ok) document.location.reload();
-  else alert('There was an error while retrieving stats');
-  toggleStats('display');
+  else toggleStats('error');
 }
 
 onClick(formSubmitBtn, async () => {
@@ -79,10 +77,15 @@ onClick(formSubmitBtn, async () => {
   if (res.ok) {
     const summoner = await res.json();
     toggleForm('success');
-    nameLabel.textContent = summoner.name;
+    nameLabel.textContent = statsOwner.textContent = summoner.name;
     toggleStats('loading');
     getStats();
   } else toggleForm('fail');
 });
 
 onClick($('#btn-update'), getStats);
+
+window.onload = () => {
+  toggleForm();
+  toggleStats();
+}
