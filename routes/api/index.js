@@ -82,11 +82,10 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
     delete dbUser.id
     await User.update({ id }, { ...dbUser, stats });
     console.log('Analysis complete for', summonerName);
-
-    res.status(200).redirect('/');
+    return res.sendStatus(200);
   } catch (err) {
     console.error(err.stack || err);
-    res.status(500);
+    return res.sendStatus(500);
   }
 });
 

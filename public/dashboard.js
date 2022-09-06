@@ -3,6 +3,30 @@ const nameInput = $('#name-input');
 const regionInput = $('#region-input');
 const formSubmitBtn = $('#form-submit');
 const nameLabel = $('#summoner-name');
+const statsDisplay = $('#stats-container');
+const statsLoader = $('#stats-loader');
+const statsError = $('#stats-error');
+
+const toggleStats = (state = null) => {
+  switch (state) {
+    case 'display':
+      statsDisplay.style.display = 'block';
+      statsLoader.style.display = 'none';
+      statsError.style.display = 'none';
+      break;
+    case 'loading':
+      statsDisplay.style.display = 'none';
+      statsLoader.style.display = 'block';
+      statsError.style.display = 'none';
+      break;
+    case 'error':
+      statsDisplay.style.display = 'none';
+      statsLoader.style.display = 'none';
+      statsError.style.display = 'block';
+      break;
+    default: break;
+  }
+}
 
 const toggleForm = (state = null) => {
   formStatus.classList.remove('is-success', 'is-danger');
@@ -25,8 +49,13 @@ const toggleForm = (state = null) => {
   }
 }
 
+// TODO: Add api request timeout
 const getStats = async () => {
-  await fetch('/api/matches');
+  toggleStats('loading');
+  const res = await fetch('/api/matches');
+  if (res.ok) document.location.reload();
+  else alert('There was an error while retrieving stats');
+  toggleStats('display');
 }
 
 onClick(formSubmitBtn, async () => {
@@ -51,8 +80,9 @@ onClick(formSubmitBtn, async () => {
     const summoner = await res.json();
     toggleForm('success');
     nameLabel.textContent = summoner.name;
-    await fetch('/api/matches');
+    toggleStats('loading');
+    getStats();
   } else toggleForm('fail');
 });
 
-onClick($('#btn-update'), async () => await fetch('/api/matches'));
+onClick($('#btn-update'), getStats);

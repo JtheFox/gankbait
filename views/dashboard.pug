@@ -31,7 +31,7 @@ block content
           button(class="button is-warning is-light ml-4" id="btn-update") Refresh
 
     mixin stats(s, role)
-      article#stats
+      article.stats
         h4(class="title is-4") In #{role}
         div.level
           div.level-item
@@ -46,13 +46,26 @@ block content
             div
               p.heading Deaths From Enemy Ganks
               p(class="title is-3")= s.games > 0 ? s.deathsFromGanks : "N/A" 
-    if user.stats
-      .stats-container
+              //- TODO: Fix alignment
+    #stats-container
+      if user.stats
         +stats(user.stats.lane, 'Lane')
         .block &nbsp;
         +stats(user.stats.jungle, 'Jungle')
-    else 
-      h4(class="title is-4") No matches analyzed! 
-      h5.subtitle Set your summoner name to get started.      
+      else 
+        h4(class="title is-4") No matches analyzed! 
+        h5.subtitle Set your summoner name to get started.      
+
+    div(class="mt-6 pt-4" id="stats-loader" style="display:none")
+      .spinner 
+        div
+        div 
+        div
+        div
+      h4(class="title is-4 mt-6") Analyzing your last 20 ranked games 
+      h5.subtitle #[span(class="has-background-warning-light has-text-black") Warning: Navigating away from the page will cancel this process]
+
+    //- TODO: Add stats error message for failed requests
+    div(class="mt-6 pt-4" id="stats-error" style="display:none")
 
   script(src="/dashboard.js") 
