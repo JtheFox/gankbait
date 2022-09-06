@@ -7,6 +7,7 @@ const statsDisplay = $('#stats-container');
 const statsLoader = $('#stats-loader');
 const statsError = $('#stats-error');
 const statsOwner = $('#stats-owner');
+const updateBtn = $('#btn-update');
 
 const toggleStats = (state = null) => {
   switch (state) {
@@ -83,7 +84,7 @@ onClick(formSubmitBtn, async () => {
   } else toggleForm('fail');
 });
 
-onClick($('#btn-update'), getStats);
+updateBtn && onClick(updateBtn, getStats);
 
 window.onload = () => {
   toggleForm();
