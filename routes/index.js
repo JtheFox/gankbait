@@ -32,7 +32,7 @@ router.get('/login', checkToken, async (req, res) => {
         client_secret: process.env.DISCORD_CLIENT_SECRET,
         code: code,
         grant_type: 'authorization_code',
-        redirect_uri: `http://localhost:3000/login`,
+        redirect_uri: `https://gankbait.jthefox.com/login`,
         scope: 'identify',
       }),
       {

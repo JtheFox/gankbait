@@ -3,8 +3,8 @@ doctype html
 html
   head
     block styles
-      link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css")
-      link(rel="stylesheet", href="/style.css")
+      link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css")
+      link(rel="stylesheet" href="/style.css")
     block scripts
       script(src="/script.js")
   body
@@ -22,7 +22,7 @@ html
             if loggedIn
               a(class="button is-dark" href="/logout") Logout 
             else 
-              a(class="button is-danger" href="https://discord.com/api/oauth2/authorize?client_id=869983919578173482&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin&response_type=code&scope=identify") Login
+              a(class="button is-danger" href="https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=https%3A%2F%2Fgankbait.jthefox.com%2Flogin&response_type=code&scope=identify") Login
 
     main
       block content 
