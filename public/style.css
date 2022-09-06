@@ -1,3 +1,4 @@
+/* Global Styles */
 body {
   display: flex;
   flex-direction: column;
@@ -8,6 +9,18 @@ body {
 
 main {
   flex: 1;
+}
+
+a {
+  color: hsl(348, 84%, 39%);
+}
+
+a:hover {
+  color: hsl(348, 87%, 18%);
+}
+
+.keyword {
+  color: hsl(348, 95%, 15%)
 }
 
 /* Layout */

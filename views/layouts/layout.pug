@@ -5,8 +5,6 @@ html
     block styles
       link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css")
       link(rel="stylesheet", href="/style.css")
-    block scripts
-      script(src="/script.js")
   body
     block head 
       header(class="navbar has-background-light px-4 py-2")
@@ -23,9 +21,41 @@ html
               a(class="button is-dark" href="/logout") Logout 
             else 
               a(class="button is-danger" href="https://discord.com/api/oauth2/authorize?client_id=869983919578173482&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin&response_type=code&scope=identify") Login
+
     main
       block content 
+
     block foot
       footer.footer 
         div(class="content has-text-centered")
-          p &copy; 2022 Jason Fox
+          a(class="modal-trigger" data-target="about-modal") What is this site?
+          p.mt-3 #[strong(class="has-text-weight-semibold") Gankbait] &copy; 2022 by #[a(href="https://github.com/JtheFox") Jason Fox]
+
+    section.modal#about-modal 
+      .modal-background
+      .modal-card 
+        header.modal-card-head 
+          p.modal-card-title About Gankbait
+          button(class="delete" aria-label="close")
+        article.modal-card-body
+          div.mb-4
+            p.is-size-4 What does it do?
+            p Gankbait is an application designed to analyze data from (up to) the last 20 games of a player's #[span.keyword ranked] League of Legends match history. The goal is to determine the player's #[span.keyword kills/deaths] resulting from #[span.keyword enemy ganks during laning phase].
+            small #[span.has-text-weight-semibold Enemy Gank]: A kill/death taking place in the physical region of a lane involving a non-lane opponent enemy. This is considered differently for junglers.
+            br
+            small #[span.has-text-weight-semibold Laning Phase]: The first 15 minutes of the game.
+          div.mb-4
+            p.is-size-4 Stats by role
+            p Stats are divided between #[span.keyword lane] (any non-jungle position) and #[span.keyword jungle].
+            p #[span.has-text-weight-semibold Lane]: Stats represent #[span.keyword enemy ganks] in the player's lane (top/mid/bot).
+            p #[span.has-text-weight-semibold Jungle]: Stats represent #[span.keyword kills/deaths] taking place in a lane on any enemy.
+          div.mb-4
+            p.is-size-4 How accurate is it?
+            p Due to the wildly dynamic and situational nature of the game, there is no way to be 100% accurate interpreting data like this; however, the results should still provide an overall accurate representation of the kills/deaths resulting from ganks. Keep reading to see how the data is interpreted.
+          div.mb-4
+            p.is-size-4 How does it work?
+            p Using the user-provided summoner name and #[a(href="https://developer.riotgames.com/apis#match-v5") Riot API for LoL Matches], the match ids for the player's 20 latest ranked games are retrieved. Then, for each of those matches, the timeline data for each match is retrieved and parsed for relevant data about ganks. Match timelines are very comprehensive, meaning there is a lot more data than the average API request. This unfortunately means it will take a little time to process a request.
+
+    block scripts
+      script(src="/script.js")
+
