@@ -53,7 +53,6 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
     const matchTeams = [];
     const matchResults = [];
     for await (const id of matchIds.data) {
-      console.log(`Evaluating match ${matchIds.data.indexOf(id) + 1} of ${matchIds.data.length}`);
       const currMatch = await axios.get(apiURL + id, rgapiAxiosConfig);
       const currTeams = await parseMatchData(currMatch.data, summonerId);
       matchTeams.push(currTeams);
@@ -78,10 +77,9 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
       }
     }
 
-    console.log('Caching results');
+    console.log('Caching results for', summonerName);
     delete dbUser.id
     await User.update({ id }, { ...dbUser, stats });
-    console.log('Analysis complete for', summonerName);
     return res.sendStatus(200);
   } catch (err) {
     console.error(err.stack || err);
