@@ -20,7 +20,7 @@ a:hover {
 }
 
 .keyword {
-  color: hsl(348, 95%, 15%)
+  color: darkred;
 }
 
 hr {
@@ -59,8 +59,8 @@ main > * {
 }
 
 .kda[data-rel='neg']::after {
-  content: '-' attr(data-value);
-  color: red;
+  content: attr(data-value);
+  color: darkred;
 }
 
 /* Spinner */

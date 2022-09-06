@@ -36,7 +36,7 @@ block content
       - const val = (v) => s.games > 0 ? v : 'N/A';
       - const avg = (v, p = 1) => val(Number.parseFloat(v).toFixed(p));
       - const kda = s.killsFromGanks / s.deathsFromGanks;
-      - const dif = avg(kda - 1, 2);
+      - const dif = Number.parseFloat(kda - 1).toFixed(2);
       article.container
         h4(class="title is-4") In #{role}
         div(class="columns")
@@ -55,7 +55,7 @@ block content
           .column
             p.heading= 'Gank KDA'
             p(class="title is-3 mb-2")= avg(kda, 2)
-            p(class="heading kda" data-value=dif data-rel=(kda > 0 ? 'pos' : kda < 0 ? 'neg' : null))
+            p(class="heading kda" data-value=avg(dif, 2) data-rel=(dif > 0 ? 'pos' : dif < 0 ? 'neg' : null))
     #stats-container
       if user.stats
         +stats(user.stats.lane, 'Lane')
