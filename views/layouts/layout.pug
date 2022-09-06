@@ -22,7 +22,7 @@ html
             if loggedIn
               a(class="button is-dark" href="/logout") Logout 
             else 
-              a(class="button is-danger" href="https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=https%3A%2F%2Fgankbait.jthefox.com%2Flogin&response_type=code&scope=identify") Login
+              a(class="button is-danger" href=oauthURL) Login
 
     main
       block content 

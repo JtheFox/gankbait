@@ -7,7 +7,10 @@ const apiRoutes = require('./api');
 router.use('/api', apiRoutes);
 
 router.get('/', checkToken, async (req, res) => {
-  if (!req.userData) return res.render('index', { loggedIn: false });
+  const oauthURL = process.env.NODE_ENV === 'production' ?
+    'https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=https%3A%2F%2Fgankbait.jthefox.com%2Flogin&response_type=code&scope=identify ' :
+    'https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin&response_type=code&scope=identify'
+  if (!req.userData) return res.render('index', { oauthURL, loggedIn: false });
   const { id, username, avatar } = req.userData;
   const dbUser = await User.get({ id });
   const user = {
@@ -32,7 +35,7 @@ router.get('/login', checkToken, async (req, res) => {
         client_secret: process.env.DISCORD_CLIENT_SECRET,
         code: code,
         grant_type: 'authorization_code',
-        redirect_uri: `https://gankbait.jthefox.com/login`,
+        redirect_uri: process.env.NODE_ENV === 'production' ? `https://gankbait.jthefox.com/login` : 'http://localhost:3000/login',
         scope: 'identify',
       }),
       {
