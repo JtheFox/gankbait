@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
@@ -10,6 +11,7 @@ const port = process.env.PORT || 3000;
 app.set('views', './views');
 app.set('view engine', 'pug');
 
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
