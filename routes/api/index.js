@@ -23,7 +23,7 @@ router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
     });
     return res.status(200).json({ name: data.name });
   } catch (err) {
-    console.error(err.stack);
+    console.error(err.stack || err);
     return res.status(404);
   }
 });
