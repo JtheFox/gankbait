@@ -5,6 +5,8 @@ html
     block styles
       link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css")
       link(rel="stylesheet", href="/style.css")
+    block scripts
+      script(src="/script.js")
   body
     block head 
       header(class="navbar has-background-light px-4 py-2")
@@ -54,8 +56,5 @@ html
             p Due to the wildly dynamic and situational nature of the game, there is no way to be 100% accurate interpreting data like this; however, the results should still provide an overall accurate representation of the kills/deaths resulting from ganks. Keep reading to see how the data is interpreted.
           div.mb-4
             p.is-size-4 How does it work?
-            p Using the user-provided summoner name and #[a(href="https://developer.riotgames.com/apis#match-v5") Riot API for LoL Matches], the match ids for the player's 20 latest ranked games are retrieved. Then, for each of those matches, the timeline data for each match is retrieved and parsed for relevant data about ganks. Match timelines are very comprehensive, meaning there is a lot more data than the average API request. This unfortunately means it will take a little time to process a request.
-
-    block scripts
-      script(src="/script.js")
+            p Using the user-provided summoner name and #[a(href="https://developer.riotgames.com/apis#match-v5") Riot API for LoL Matches], the match ids for the player's 20 latest ranked games are retrieved. Then, for each of those matches, the timeline data for each match is retrieved and parsed for relevant data about ganks. Match timelines are very comprehensive, meaning there is a lot more data than the average API request. This unfortunately means it will take a little time to process a request.    
 
