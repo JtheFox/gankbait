@@ -31,10 +31,22 @@ html
       block content 
 
     block foot
+      mixin spacer
+        span.mx-2 |
       footer.footer 
         div(class="content has-text-centered")
-          a(class="modal-trigger" data-target="about-modal") Click here for more information
-          p.mt-3 #[a(href="https://github.com/JtheFox") Source Code] | #[strong(class="has-text-weight-semibold") Gankbait] &copy; 2022 by #[a(href="https://github.com/JtheFox") Jason Fox]
+          div
+            a(class="modal-trigger" data-target="about-modal") Click here for more information
+            +spacer
+            a(class="modal-trigger" data-target="faq-modal") Troubleshooting
+            +spacer 
+            a(class="modal-trigger" data-target="privacy-modal") Why Discord login?
+          p.mt-3 #[a(href="https://github.com/JtheFox/gankbait") Source Code] | #[strong(class="has-text-weight-semibold") Gankbait] &copy; 2022 by #[a(href="https://github.com/JtheFox") Jason Fox]
+
+    mixin semibold(text)
+      span.has-text-weight-semibold= text
+    mixin colorText(text, color = 'grey')
+      span(class=`has-text-${color}-dark`)= text
 
     section.modal#about-modal 
       .modal-background
@@ -46,14 +58,14 @@ html
           div.mb-4
             p.is-size-4 What does it do?
             p Gankbait is an application designed to analyze data from (up to) the last 20 games of a player's #[span.keyword ranked] League of Legends match history. The goal is to determine the player's #[span.keyword kills/deaths] resulting from #[span.keyword enemy ganks during laning phase]. Kills in this case includes both final blows and assists.
-            small #[span.has-text-weight-semibold Enemy Gank]: A kill/death taking place in the physical region of a lane involving a non-lane opponent enemy. This is considered differently for junglers.
+            small #[+semibold('Enemy Gank')]: A kill/death taking place in the physical region of a lane involving a non-lane opponent enemy. This is considered differently for junglers.
             br
-            small #[span.has-text-weight-semibold Laning Phase]: The first 15 minutes of the game.
+            small #[+semibold('Laning Phase')]: The first 15 minutes of the game.
           div.mb-4
             p.is-size-4 Stats by role
             p Stats are divided between #[span.keyword lane] (any non-jungle position) and #[span.keyword jungle].
-            p #[span.has-text-weight-semibold Lane]: Stats represent #[span.keyword enemy ganks] in the player's lane (top/mid/bot).
-            p #[span.has-text-weight-semibold Jungle]: Stats represent #[span.keyword kills/deaths] taking place in a lane on any enemy.
+            p #[+semibold('Lane')]: Stats represent #[span.keyword enemy ganks] in the player's lane (top/mid/bot).
+            p #[+semibold('Jungle')]: Stats represent #[span.keyword kills/deaths] taking place in a lane on any enemy.
           div.mb-4
             p.is-size-4 How accurate is it?
             p Due to the wildly dynamic and situational nature of the game, there is no way to be 100% accurate interpreting data like this; however, the results should still provide an overall accurate representation of the kills/deaths resulting from ganks. Keep reading to see how the data is interpreted.
@@ -61,3 +73,39 @@ html
             p.is-size-4 How does it work?
             p Using the user-provided summoner name and #[a(href="https://developer.riotgames.com/apis#match-v5") Riot API for LoL Matches], the match ids for the player's 20 latest ranked games are retrieved. Then, for each of those matches, the timeline data for each match is retrieved and parsed for relevant data about ganks. Match timelines are very comprehensive, meaning there is a lot more data than the average API request. This unfortunately means it will take a little time to process a request.    
 
+    section.modal#faq-modal 
+      .modal-background
+      .modal-card 
+        header.modal-card-head 
+          p.modal-card-title Troubleshooting / FAQ
+          button(class="delete" aria-label="close")
+        article.modal-card-body
+          div.mb-4
+            p.is-size-4 The stats are for the wrong player
+            p Check and make sure that #[+semibold('Summoner Name')] and the #[+semibold('Stats for')] name are the same. If they are different, click #[+colorText('Update', 'success')] or #[+colorText('Refresh', 'warning')] to fetch the latest data for the set #[+semibold('Summoner Name')].
+          div.mb-4
+            p.is-size-4 I keep getting errors
+            p Check the error message #[span(class="has-text-danger has-background-danger-light") highlighted in red]. This site is currently subject to Riot's #[a(href="https://developer.riotgames.com/docs/portal#web-apis_personal-api-keys") personal API key rate limit], so any decent amount of traffic will result in issues handling everyone's requests. One way of handling this is unfortunately limiting everyone's requests to once per minute.
+          div.mb-4
+            p.is-size-5 I keep getting "The API is currently handling too many requests"
+            p This most likely means the site is picking up in traffic! Unfortunately, for now, you will have to wait a minute and try again. 
+          div.mb-4
+            p.is-size-4 Having issues not listed here?
+            p If you are experiencing an issue not covered here, I would love to hear about it so I can fix it! Submit an issue for the site on GitHub by #[a(href="https://github.com/JtheFox/gankbait/issues/new" target="_blank") clicking here]. Make sure to include a good title and be as descriptive as possible.
+
+    section.modal#privacy-modal 
+      .modal-background
+      .modal-card 
+        header.modal-card-head 
+          p.modal-card-title Using Discord For Authentication
+          button(class="delete" aria-label="close")
+        article.modal-card-body
+          div.mb-4
+            p.is-size-4 Why do I have to use Discord to log in?
+            p Part of the motivation for this project was to implement #[a(href="https://auth0.com/intro-to-iam/what-is-oauth-2/") OAuth]. I chose to use #[a(href="https://discord.com/developers/docs/topics/oauth2") Discord's OAuth2] because of the almost certainty that users (League of Legends players) will have a Discord account. Since the site uses and maintains user data and persistent login states, some form of authentication would be needed to identify the user. Instead of having to create a username and password that you probably won't remember, you can just log in with a couple clicks through Discord!
+          div.mb-4
+            p.is-size-4 What Discord information do you need?
+            p When logging in through Discord OAuth, you can see that you are only granting this site permission to access to your #[+semibold('username')], #[+semibold('avatar')], and #[+semibold('banner')]. This comes with the #[+semibold('identify')] OAuth scope. Your username and avatar are stored and used to identify you as a unique user, allowing your actions on the site to be saved and quickly retrieved next time you visit.
+          div.mb-4
+            p.is-size-4 Is my information secure?
+            p Yes, all information stored on this site is stored securely. Additionally, this site does not store any sensitive information or data- only the minimum necessary to identify users, all of which is already publicly available through Discord and Riot Games APIs.
