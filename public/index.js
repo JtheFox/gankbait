@@ -9,7 +9,7 @@ const statsError = $('#stats-error');
 const statsOwner = $('#stats-owner');
 const updateBtn = $('#btn-update');
 
-const toggleStats = (state = null) => {
+const toggleStats = (state = null, msg) => {
   switch (state) {
     case 'loading':
       statsDisplay.style.display = 'none';
@@ -20,6 +20,7 @@ const toggleStats = (state = null) => {
       statsDisplay.style.display = 'none';
       statsLoader.style.display = 'none';
       statsError.style.display = 'block';
+      if (msg) $('#request-error').textContent = msg;
       break;
     default:
       statsDisplay.style.display = 'block';
@@ -53,8 +54,9 @@ const toggleForm = (state = null) => {
 const getStats = async () => {
   toggleStats('loading');
   const res = await fetch('/api/matches');
-  if (res.ok) document.location.reload();
-  else toggleStats('error');
+  if (res.ok) return document.location.reload();
+  const err = await res.json();
+  toggleStats('error', err.message);
 }
 
 onClick(formSubmitBtn, async () => {
