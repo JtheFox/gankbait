@@ -118,6 +118,6 @@ dismissBtn && onClick(dismissBtn, () => document.location.reload());
 window.onload = () => {
   toggleForm();
   toggleStats();
-  regionInput.value = nameLabel.dataset.region;
-  queueInput.value = nameLabel.dataset.queue;
+  regionInput.value = nameLabel.dataset.region || 'na1';
+  queueInput.value = nameLabel.dataset.queue || 'ranked';
 }
