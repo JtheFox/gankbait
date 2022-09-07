@@ -6,8 +6,10 @@ const nameLabel = $('#summoner-name');
 const statsDisplay = $('#stats-container');
 const statsLoader = $('#stats-loader');
 const statsError = $('#stats-error');
+const statsTitle = $('#stats-title');
 const statsOwner = $('#stats-owner');
 const updateBtn = $('#btn-update');
+const dismissBtn = $('#dismiss-error')
 
 const toggleStats = (state = null, msg) => {
   switch (state) {
@@ -34,6 +36,7 @@ const toggleForm = (state = null) => {
   formStatus.classList.remove('is-success', 'is-danger');
   nameInput.classList.remove('is-success', 'is-danger');
   formStatus.textContent = '';
+  if (typeof msg !== 'string') msg = null;
 
   switch (state) {
     case 'success':
@@ -45,7 +48,7 @@ const toggleForm = (state = null) => {
     case 'fail':
       formStatus.classList.add('is-danger');
       nameInput.classList.add('is-danger');
-      formStatus.textContent = 'Failed to update summoner. Check that the name and region are correct.';
+      formStatus.textContent = `Failed to update summoner. ${msg ? msg : 'Check that the name and region are correct.'}`;
       break;
     default: break;
   }
@@ -62,7 +65,16 @@ const getStats = async () => {
 
 onClick(formSubmitBtn, async () => {
   toggleForm();
-  if (!nameInput.value.length) toggleForm('fail');
+  const namesMatch = nameLabel.textContent === statsOwner.textContent;
+  console.log(namesMatch, nameLabel.textContent, statsOwner.textContent)
+  if (!nameInput.value.length && namesMatch) return toggleForm('fail', 'Field cannot be empty.');
+  if (nameLabel.textContent === nameInput.value) return toggleForm('fail', 'You have already set this summoner name.')
+
+  if (!namesMatch) {
+    statsTitle.textContent = 'Stats for ' + nameLabel.textContent
+    toggleStats('loading');
+    return getStats();
+  }
 
   const selected = regionInput.options[regionInput.selectedIndex].value
   const data = {
@@ -82,13 +94,15 @@ onClick(formSubmitBtn, async () => {
     const summoner = await res.json();
     toggleForm('success');
     nameLabel.textContent = summoner.name;
-    $('#stats-title').textContent = 'Stats for ' + summoner.name
+    statsTitle.textContent = 'Stats for ' + summoner.name
     toggleStats('loading');
     getStats();
   } else toggleForm('fail');
 });
 
 updateBtn && onClick(updateBtn, getStats);
+
+dismissBtn && onClick(dismissBtn, () => document.location.reload());
 
 window.onload = () => {
   toggleForm();
