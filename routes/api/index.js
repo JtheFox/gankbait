@@ -14,7 +14,7 @@ const apiLimiter = rateLimit({
 
 router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
   const { id } = userData;
-  const { name, region } = body;
+  const { name, region, queue } = body;
 
   try {
     const requestURL = `https://${region}.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}`;
@@ -26,12 +26,14 @@ router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
       summonerName: data.name,
       summonerId: data.id,
       summonerPuuid: data.puuid,
-      region
+      region,
+      queue
     });
     return res.status(200).json({ name: data.name });
   } catch (err) {
-    console.error(err.stack || err);
-    return res.status(404);
+    console.error(err.stack || err.response || err);
+    if (err.response?.status === 404) return res.sendStatus(204);
+    return res.sendStatus(500);
   }
 });
 
@@ -50,12 +52,17 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
   }
 
   const dbUser = await User.get({ id });
+  const clearStats = async () => await User.update({ id }, { "$REMOVE": ["stats"] });
   try {
-    const { summonerId, summonerName, summonerPuuid, region } = dbUser;
+    const { summonerId, summonerName, summonerPuuid, region, queue } = dbUser;
     console.log('Analyzing data for', summonerName);
     const apiURL = `https://${regionRoute(region)}.api.riotgames.com/lol/match/v5/matches/`
 
-    const matchIds = await axios.get(`${apiURL}by-puuid/${summonerPuuid}/ids`, rgapiAxiosConfig);
+    const matchIds = await axios.get(`${apiURL}by-puuid/${summonerPuuid}/ids/?${queue === 'ranked' ? 'type=ranked' : 'queue=400'}`, rgapiAxiosConfig);
+    if (!matchIds.data.length) {
+      await clearStats();
+      return res.sendStatus(204);
+    }
 
     const matchTeams = [];
     const matchResults = [];
@@ -91,8 +98,8 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
     await User.update({ id }, { ...dbUser, stats });
     return res.sendStatus(200);
   } catch (err) {
-    console.error(err.stack || err);
-    if (dbUser.stats && dbUser.stats.summonerName !== dbUser.summonerName) await User.update({ id }, { "$REMOVE": ["stats"] });
+    console.error(err.stack || err.response || err);
+    if (dbUser.stats && dbUser.stats.summonerName !== dbUser.summonerName) await clearStats();
     const message = err.response?.status === 429 ?
       'The API is currently handling too many requests and is being rate limited by the Riot API, please wait a minute before trying another request' :
       'The server encountered an error processing the request or the request timed out.'

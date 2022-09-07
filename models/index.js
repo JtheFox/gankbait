@@ -15,6 +15,7 @@ const UserSchema = new dynamoose.Schema({
   "summonerId": String,
   "summonerPuuid": String,
   "region": String,
+  "queue": String,
   "stats": {
     type: Object,
     schema: {

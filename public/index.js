@@ -1,6 +1,7 @@
 const formStatus = $('#form-status');
 const nameInput = $('#name-input');
 const regionInput = $('#region-input');
+const queueInput = $('#queue-input');
 const formSubmitBtn = $('#form-submit');
 const nameLabel = $('#summoner-name');
 const statsDisplay = $('#stats-container');
@@ -9,7 +10,7 @@ const statsError = $('#stats-error');
 const statsTitle = $('#stats-title');
 const statsOwner = $('#stats-owner');
 const updateBtn = $('#btn-update');
-const dismissBtn = $('#dismiss-error')
+const dismissBtn = $('#dismiss-error');
 
 const toggleStats = (state = null, msg) => {
   switch (state) {
@@ -32,7 +33,7 @@ const toggleStats = (state = null, msg) => {
   }
 }
 
-const toggleForm = (state = null) => {
+const toggleForm = (state = null, msg) => {
   formStatus.classList.remove('is-success', 'is-danger');
   nameInput.classList.remove('is-success', 'is-danger');
   formStatus.textContent = '';
@@ -57,29 +58,37 @@ const toggleForm = (state = null) => {
 const getStats = async () => {
   toggleStats('loading');
   const res = await fetch('/api/matches');
-  if (res.ok) return document.location.reload();
-  if (res.status  === 429) return toggleStats('error', 'You are sending too many requests! Limit: 1 request per minute.')
-  const err = await res.json();
-  toggleStats('error', err.message);
+  switch (res.status) {
+    case 200: return document.location.reload();
+    case 204: return toggleStats('error', 'No matches found for the selected queue type. Go play some games and come back so we can have data to analyze!')
+    case 429: return toggleStats('error', 'You are sending too many requests! Limit: 1 request per minute.');
+    default:
+      const err = await res.json();
+      toggleStats('error', err.message);
+      break;
+  }
 }
 
 onClick(formSubmitBtn, async () => {
   toggleForm();
+  const regionSel = $('#region-input').options[$('#region-input').selectedIndex].value;
+  const queueSel = $('#queue-input').options[$('#queue-input').selectedIndex].value;
   const namesMatch = nameLabel.textContent === statsOwner.textContent;
-  console.log(namesMatch, nameLabel.textContent, statsOwner.textContent)
-  if (!nameInput.value.length && namesMatch) return toggleForm('fail', 'Field cannot be empty.');
-  if (nameLabel.textContent === nameInput.value) return toggleForm('fail', 'You have already set this summoner name.')
+  const selectMatch = regionSel === nameLabel.dataset.region && queueSel === nameLabel.dataset.queue;
 
-  if (!namesMatch) {
+  if (!nameInput.value.length && namesMatch && selectMatch) return toggleForm('fail', 'Field cannot be empty.');
+  if (nameLabel.textContent === nameInput.value && selectMatch) return toggleForm('fail', 'You have already set this summoner name.')
+
+  if (!namesMatch && selectMatch) {
     statsTitle.textContent = 'Stats for ' + nameLabel.textContent
     toggleStats('loading');
     return getStats();
   }
 
-  const selected = regionInput.options[regionInput.selectedIndex].value
   const data = {
-    name: nameInput.value,
-    region: selected
+    name: nameInput.value || nameLabel.textContent,
+    region: regionSel,
+    queue: queueSel
   }
 
   const res = await fetch('/api/summoner', {
@@ -89,6 +98,8 @@ onClick(formSubmitBtn, async () => {
     },
     body: JSON.stringify(data),
   });
+
+  if (res.status === 204) return toggleForm('fail', 'Summoner name not found in selected region.');
 
   if (res.ok) {
     const summoner = await res.json();
@@ -107,4 +118,6 @@ dismissBtn && onClick(dismissBtn, () => document.location.reload());
 window.onload = () => {
   toggleForm();
   toggleStats();
+  regionInput.value = nameLabel.dataset.region;
+  queueInput.value = nameLabel.dataset.queue;
 }
