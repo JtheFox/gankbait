@@ -1,9 +1,16 @@
 const router = require('express').Router();
 const axios = require('axios');
+const rateLimit = require('express-rate-limit');
 const { authenticateToken } = require('../../utils/auth');
 const { parseMatchData, parseTimelineData } = require('../../utils/parser');
 const { User } = require('../../models');
 const rgapiAxiosConfig = { headers: { 'X-Riot-Token': process.env.RIOT_API_KEY } };
+const apiLimiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	max: 1, // Limit 1 request per window
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
 
 router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
   const { id } = userData;
@@ -28,7 +35,7 @@ router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
   }
 });
 
-router.get('/matches', authenticateToken, async ({ userData }, res) => {
+router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res) => {
   const { id } = userData;
   const regionRoute = (region) => {
     switch (region) {
@@ -42,8 +49,8 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
     }
   }
 
+  const dbUser = await User.get({ id });
   try {
-    const dbUser = await User.get({ id });
     const { summonerId, summonerName, summonerPuuid, region } = dbUser;
     console.log('Analyzing data for', summonerName);
     const apiURL = `https://${regionRoute(region)}.api.riotgames.com/lol/match/v5/matches/`
@@ -66,6 +73,7 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
     const jungleResults = matchResults.filter(({ jungle }) => jungle);
 
     const stats = {
+      summonerName,
       lane: {
         games: laneResults.length,
         killsFromGanks: laneResults.reduce((acc, s) => acc + s.killsFromGanks, 0),
@@ -84,7 +92,7 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
     return res.sendStatus(200);
   } catch (err) {
     console.error(err.stack || err);
-    await User.update({ id }, { "$REMOVE": ["stats"] });
+    if (dbUser.stats && dbUser.stats.summonerName !== dbUser.summonerName) await User.update({ id }, { "$REMOVE": ["stats"] });
     const message = err.response?.status === 429 ?
       'The API is currently handling too many requests and is being rate limited by the Riot API, please wait a minute before trying another request' :
       'The server encountered an error processing the request or the request timed out.'

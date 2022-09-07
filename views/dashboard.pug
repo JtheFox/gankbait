@@ -27,7 +27,10 @@ block content
     .level
       .level-item
         if user.summonerId
-          h3.title#stats-title Stats for #[span#stats-owner= user.summonerName]
+          if user.stats
+            h3.title#stats-title Stats for #[span#stats-owner= user.stats.summonerName]
+          else 
+            h3.title#stats-title No Stats Yet For #[span#stats-owner= user.summonerName]
           button(class="button is-warning is-light ml-4" id="btn-update") Refresh
         else 
           h3.title#stats-title No Summoner Set #[span#stats-owner]

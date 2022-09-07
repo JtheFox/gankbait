@@ -55,6 +55,7 @@ const getStats = async () => {
   toggleStats('loading');
   const res = await fetch('/api/matches');
   if (res.ok) return document.location.reload();
+  if (res.status  === 429) return toggleStats('error', 'You are sending too many requests! Limit: 1 request per minute.')
   const err = await res.json();
   toggleStats('error', err.message);
 }

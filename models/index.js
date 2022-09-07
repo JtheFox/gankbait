@@ -18,6 +18,7 @@ const UserSchema = new dynamoose.Schema({
   "stats": {
     type: Object,
     schema: {
+      "summonerName": String,
       "lane": {
         type: Object,
         schema: StatsSchema
