@@ -22,8 +22,8 @@ router.get('/', checkToken, async (req, res) => {
 });
 
 router.get('/login', checkToken, async (req, res) => {
-  if (req.userData) return res.redirect('/')
-
+  if (req.userData || req.query.error === 'access_denied') return res.redirect('/')
+  
   try {
     const { code } = req.query;
     if (!code) return res.sendStatus(401)
