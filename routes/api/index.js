@@ -52,14 +52,15 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
 
     const matchTeams = [];
     const matchResults = [];
-    for await (const id of matchIds.data) {
+
+    await Promise.all(matchIds.data.map(async (id) => {
       const currMatch = await axios.get(apiURL + id, rgapiAxiosConfig);
       const currTeams = await parseMatchData(currMatch.data, summonerId);
       matchTeams.push(currTeams);
       const currTimeline = await axios.get(apiURL + id + '/timeline', rgapiAxiosConfig);
       const currResults = parseTimelineData(currTimeline.data, currTeams);
-      matchResults.push(currResults)
-    }
+      matchResults.push(currResults);
+    }));
 
     const laneResults = matchResults.filter(({ jungle }) => !jungle);
     const jungleResults = matchResults.filter(({ jungle }) => jungle);
@@ -83,7 +84,11 @@ router.get('/matches', authenticateToken, async ({ userData }, res) => {
     return res.sendStatus(200);
   } catch (err) {
     console.error(err.stack || err);
-    return res.sendStatus(500);
+    await User.update({ id }, { "$REMOVE": ["stats"] });
+    const message = err.response?.status === 429 ?
+      'The API is currently handling too many requests and is being rate limited by the Riot API, please wait a minute before trying another request' :
+      'The server encountered an error processing the request or the request timed out.'
+    return res.status(500).json({ message });
   }
 });
 
