@@ -31,7 +31,7 @@ router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
     });
     return res.status(200).json({ name: data.name });
   } catch (err) {
-    console.error(err.stack || err.response || err);
+    console.error(err.stack || err.response.data || err);
     if (err.response?.status === 404) return res.sendStatus(204);
     return res.sendStatus(500);
   }
@@ -98,7 +98,7 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
     await User.update({ id }, { ...dbUser, stats });
     return res.sendStatus(200);
   } catch (err) {
-    console.error(err.stack || err.response || err);
+    console.error(err.stack || err.response.data || err);
     if (dbUser.stats && dbUser.stats.summonerName !== dbUser.summonerName) await clearStats();
     const message = err.response?.status === 429 ?
       'The API is currently handling too many requests and is being rate limited by the Riot API, please wait a minute before trying another request' :

@@ -65,7 +65,7 @@ router.get('/login', checkToken, async (req, res) => {
       })
       .redirect('/')
   } catch (err) {
-    console.error(err.stack || err.response || err);
+    console.error(err.stack || err.response.data || err);
     return res.status(500).json({ message: 'An internal server error occurred' });
   }
 });
