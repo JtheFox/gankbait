@@ -44,23 +44,25 @@ block content
     mixin stats(s, role)
       - const val = (v) => s.games > 0 ? v : 'N/A';
       - const avg = (v, p = 1) => val(Number.parseFloat(v).toFixed(p));
-      - const kda = s.killsFromGanks / s.deathsFromGanks;
-      - const dif = Number.parseFloat(kda - 1).toFixed(2);
+      - const [kfg, dfg] = [s.killsFromGanks, s.deathsFromGanks];
+      - const kda = kfg / (dfg === 0 ? 1 : dfg);
+      - const dif = kda === 0 ? 0.00 : Number.parseFloat(kda - 1).toFixed(2);
+      - const totalGames = user.stats.lane.games + user.stats.jungle.games;
       article.container
         h4(class="title is-4") In #{role}
         div(class="columns")
           .column
             p.heading Games
             p(class="title is-3 mb-2")= s.games
-            p.heading= `${Math.round((s.games / 20) * 100)}%`
+            p.heading= `${Math.round((s.games / totalGames) * 100)}%`
           .column
             p.heading= role.toLowerCase() === 'jungle' ? 'Ganks resulting in kills' : 'Kills from enemy ganks'
-            p(class="title is-3 mb-2")= val(s.killsFromGanks) 
-            p.heading Avg !{avg(s.killsFromGanks / s.games)}
+            p(class="title is-3 mb-2")= val(kfg) 
+            p.heading Avg !{avg(kfg / s.games)}
           .column
             p.heading= role.toLowerCase() === 'jungle' ? 'Ganks resulting in deaths' : 'Deaths from enemy ganks'
-            p(class="title is-3 mb-2")= val(s.deathsFromGanks) 
-            p.heading Avg !{avg(s.deathsFromGanks / s.games)}
+            p(class="title is-3 mb-2")= val(dfg) 
+            p.heading Avg !{avg(dfg / s.games)}
           .column
             p.heading= 'Gank KDA'
             p(class="title is-3 mb-2")= avg(kda, 2)
