@@ -6,10 +6,10 @@ const { parseMatchData, parseTimelineData } = require('../../utils/parser');
 const { User } = require('../../models');
 const rgapiAxiosConfig = { headers: { 'X-Riot-Token': process.env.RIOT_API_KEY } };
 const apiLimiter = rateLimit({
-  windowMs: 30 * 1000, // 30 seconds
-  max: 1, // Limit 1 request per window
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  windowMs: 30 * 1000,
+  max: 1,
+  standardHeaders: true,
+  legacyHeaders: false,
 })
 
 router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
@@ -67,7 +67,8 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
     const matchTeams = [];
     const matchResults = [];
 
-    if (process.env.NODE_ENV === 'production') setTimeout(() => { console.log('Pausing for rate limit') }, 2000);
+    // Pause for rate limit
+    if (process.env.NODE_ENV === 'production') await new Promise(r => setTimeout(r, 2000));
 
     await Promise.all(matchIds.data.map(async (id) => {
       const currMatch = await axios.get(apiURL + id, rgapiAxiosConfig);

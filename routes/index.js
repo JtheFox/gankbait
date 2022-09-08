@@ -8,8 +8,9 @@ router.use('/api', apiRoutes);
 
 router.get('/', checkToken, async (req, res) => {
   const { code, action } = req.query;
-  const redirectURL = req.protocol + '://' + req.get('host') + '/';
-  const oauthURL =`https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=${encodeURIComponent(redirectURL)}&response_type=code&scope=identify`;
+  const domain = req.get('host');
+  const redirectURL = /elasticbeanstalk|localhost/i.test(domain) ? 'http' : 'https' + '://' + req.get('host') + '/';
+  const oauthURL = `https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=${encodeURIComponent(redirectURL)}&response_type=code&scope=identify`;
 
   try {
     if (req.userData && action === 'logout') {
@@ -20,7 +21,6 @@ router.get('/', checkToken, async (req, res) => {
     }
 
     if (!req.userData && !code || req.query.error === 'access_denied') {
-      console.info('Displaying login page');
       return res.render('index', { oauthURL, loggedIn: false });
     }
 
@@ -56,7 +56,8 @@ router.get('/', checkToken, async (req, res) => {
 
       return res
         .cookie('access_token', token, {
-          httpOnly: true,
+          sameSite: 'None',
+          path: '/',
           secure: process.env.NODE_ENV === 'production',
         })
         .status(200)
@@ -71,7 +72,6 @@ router.get('/', checkToken, async (req, res) => {
       avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`,
     }
 
-    console.info('Welcome', id)
     return res.render('dashboard', { user, loggedIn: true });
   } catch (err) {
     console.error(err.stack || err.response.data || err);
