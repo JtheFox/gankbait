@@ -23,7 +23,7 @@ html
               p= user.username
           .buttons
             if loggedIn
-              a(class="button is-dark" href="/logout") Logout 
+              a(class="button is-dark" href="/?action=logout") Logout 
             else 
               a(class="button is-danger" href=oauthURL) Login
 
