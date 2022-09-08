@@ -85,7 +85,7 @@ html
             p Check and make sure that #[+semibold('Summoner Name')] and the #[+semibold('Stats for')] name are the same. If they are different, click #[+colorText('Update', 'success')] or #[+colorText('Refresh', 'warning')] to fetch the latest data for the set #[+semibold('Summoner Name')].
           div.mb-4
             p.is-size-4 I keep getting errors
-            p Check the error message #[span(class="has-text-danger has-background-danger-light") highlighted in red]. This site is currently subject to Riot's #[a(href="https://developer.riotgames.com/docs/portal#web-apis_personal-api-keys") personal API key rate limit], so any decent amount of traffic will result in issues handling everyone's requests. One way of handling this is unfortunately limiting everyone's requests to once per minute.
+            p Check the error message #[span(class="has-text-danger has-background-danger-light") highlighted in red]. This site is currently subject to Riot's #[a(href="https://developer.riotgames.com/docs/portal#web-apis_personal-api-keys") personal API key rate limit], so any decent amount of traffic will result in issues handling everyone's requests. One way of handling this is unfortunately limiting everyone's requests to once per 30 seconds.
           div.mb-4
             p.is-size-5 I keep getting "The API is currently handling too many requests"
             p This most likely means the site is picking up in traffic! Unfortunately, for now, you will have to wait a minute and try again. 

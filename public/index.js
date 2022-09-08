@@ -61,7 +61,7 @@ const getStats = async () => {
   switch (res.status) {
     case 200: return document.location.reload();
     case 204: return toggleStats('error', 'No matches found for the selected queue type. Go play some games and come back so we can have data to analyze!')
-    case 429: return toggleStats('error', 'You are sending too many requests! Limit: 1 request per minute.');
+    case 429: return toggleStats('error', 'You are sending too many requests! Limit: 1 request per 30 seconds.');
     default:
       const err = await res.json();
       toggleStats('error', err.message);
