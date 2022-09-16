@@ -9,7 +9,7 @@ router.use('/api', apiRoutes);
 router.get('/', checkToken, async (req, res) => {
   const { code, action } = req.query;
   const domain = req.get('host');
-  const redirectURL = /elasticbeanstalk|localhost/i.test(domain) ? 'http' : 'https' + '://' + req.get('host') + '/';
+  const redirectURL = (/elasticbeanstalk|localhost/i.test(domain) ? 'http' : 'https') + '://' + req.get('host') + '/';
   const oauthURL = `https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=${encodeURIComponent(redirectURL)}&response_type=code&scope=identify`;
 
   try {
