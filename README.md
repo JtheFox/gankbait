@@ -8,7 +8,7 @@
 ![Riot Games](https://img.shields.io/badge/riotgames-D32936.svg?style=for-the-badge&logo=riotgames&logoColor=white)
 ![AmazonDynamoDB](https://img.shields.io/badge/Amazon%20DynamoDB-4053D6?style=for-the-badge&logo=Amazon%20DynamoDB&logoColor=white)
 
-## 🔗 [Live Site](https://gankbait.jthefox.com)
+## 🔗 [Live Site](https://frightened-hat-colt.cyclic.app/)
 
 ### Table of Contents
 1. [Motivation](#motivation)
