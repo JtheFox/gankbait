@@ -5,7 +5,7 @@ const timelineData = require('./exampleData/timelineData');
 const summonerId = 'LxX5R76anqiiD9zGBEJtd2Lzgg2IQUFWu6XAz6CaRE6L7ro';
 let parsedMatch;
 
-test('parses matches data from Riot match-v5 API', () => {
+test('parses match data from Riot Match-v5 API', () => {
   parsedMatch = parseMatchData(matchData, summonerId);
   const { blue, red } = parsedMatch;
   expect(blue.win).toBe(true);
@@ -27,4 +27,14 @@ test('parses matches data from Riot match-v5 API', () => {
     "searchOrigin": "red"
   }
   expect(compareShallowObjects(origin, expected)).toBe(true);
+});
+
+test('parses match timeline data from Riot Match-v5 API', () => {
+  const parsedTimeline = parseTimelineData(timelineData, parsedMatch);
+  const expected = {
+    "jungler": false,
+    "killsFromGanks": 1,
+    "deathsFromGanks": 1
+  }
+  expect(compareShallowObjects(parsedTimeline, expected)).toBe(true);
 });
