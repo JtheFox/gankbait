@@ -1,4 +1,30 @@
 const { parseMatchData, parseTimelineData } = require('../utils/parser');
-const match = require('./exampleData/matchData');
-const timeline = require('./exampleData/timelineData');
+const { compareShallowObjects } = require('../utils/helpers');
+const matchData = require('./exampleData/matchData');
+const timelineData = require('./exampleData/timelineData');
 const summonerId = 'LxX5R76anqiiD9zGBEJtd2Lzgg2IQUFWu6XAz6CaRE6L7ro';
+let parsedMatch;
+
+test('parses matches data from Riot match-v5 API', () => {
+  parsedMatch = parseMatchData(matchData, summonerId);
+  const { blue, red } = parsedMatch;
+  expect(blue.win).toBe(true);
+  expect(red.win).toBe(false);
+  expect(blue.participants.length).toBe(5);
+  expect(red.participants.length).toBe(5);
+  const origin = [...blue.participants, ...red.participants].find(s => s.searchOrigin);
+  const expected = {
+    "summoner": "TiddyBongo",
+    "puuid": "HaRBje9KHYHSixzs9louvCODlRS0GsR0QChK2vChlTrbLVt-SEKC1Ksy3FhW6msgPco24YBmbxJqxw",
+    "champion": "Aphelios",
+    "icon": "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/523.png",
+    "kills": 5,
+    "deaths": 15,
+    "assists": 13,
+    "kda": "1.20",
+    "pos": 4,
+    "lane": "BOT",
+    "searchOrigin": "red"
+  }
+  expect(compareShallowObjects(origin, expected)).toBe(true);
+});
