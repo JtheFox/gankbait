@@ -6,15 +6,13 @@ const { User } = require('../models');
 const apiRoutes = require('./api');
 router.use('/api', apiRoutes);
 
-router.get('/', checkToken, async (req, res) => {
+router.get('*', checkToken, async (req, res) => {
   const { code, action } = req.query;
   const domain = req.get('host');
   const redirectURL =
     (/localhost/i.test(domain) ? 'http' : 'https')
     + '://' + req.get('host') + '/' +
     (/localhost/i.test(domain) ? process.env.APP_URL : '');
-  console.log(process.env.APP_URL)
-  console.log(redirectURL)
   const oauthURL = `https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=${encodeURIComponent(redirectURL)}&response_type=code&scope=identify`;
 
   try {
@@ -22,7 +20,7 @@ router.get('/', checkToken, async (req, res) => {
       return res
         .clearCookie('access_token')
         .status(200)
-        .redirect('/');
+        .redirect(redirectURL);
     }
 
     if (!req.userData && !code || req.query.error === 'access_denied') {
@@ -52,12 +50,9 @@ router.get('/', checkToken, async (req, res) => {
       });
       const token = generateToken(user.data);
 
-      try {
-        await User.create({ "id": user.data.id });
-        console.log('New user has logged in');
-      } catch {
-        console.log('Existing user has logged in');
-      }
+      const existingUser = await User.findById(user.data.id);
+      if (!existingUser) await User.create({ _id: user.data.id })
+      console.log((existingUser ? 'Existing' : 'New') + ' user has logged in')
 
       return res
         .cookie('access_token', token, {
@@ -66,11 +61,11 @@ router.get('/', checkToken, async (req, res) => {
           secure: process.env.NODE_ENV === 'production',
         })
         .status(200)
-        .redirect('/');
+        .redirect(redirectURL);
     }
 
     const { id, username, avatar } = req.userData;
-    const dbUser = await User.get({ id });
+    const dbUser = await User.findById(id);
     const user = {
       ...dbUser,
       username,
@@ -84,7 +79,5 @@ router.get('/', checkToken, async (req, res) => {
     return res.redirect('/');
   }
 });
-
-router.get('*', (req, res) => res.redirect('/'));
 
 module.exports = router;

@@ -21,6 +21,8 @@ const UserSchema = new mongoose.Schema({
     "lane": StatsSchema,
     "jungle": StatsSchema
   }
+}, {
+  toJSON: { virtuals: true }
 });
 
 const User = mongoose.model("GbUser", UserSchema);
