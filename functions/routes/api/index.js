@@ -6,7 +6,7 @@ const { parseMatchData, parseTimelineData } = require('../../utils/parser');
 const { User } = require('../../models');
 const rgapiAxiosConfig = { headers: { 'X-Riot-Token': process.env.RIOT_API_KEY } };
 const apiLimiter = rateLimit({
-  windowMs: 30 * 1000,
+  windowMs: 10 * 1000,
   max: 1,
   standardHeaders: true,
   legacyHeaders: false,
@@ -21,8 +21,7 @@ router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
     const response = await axios.get(requestURL, rgapiAxiosConfig);
     if (response.status === 404) return res.status(404);
     const { data } = response;
-    await User.update({
-      id,
+    await User.updateOne({ _id: id }, {
       summonerName: data.name,
       summonerId: data.id,
       summonerPuuid: data.puuid,
@@ -51,8 +50,8 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
     }
   }
 
-  const dbUser = await User.get({ id });
-  const clearStats = async () => await User.update({ id }, { "$REMOVE": ["stats"] });
+  const dbUser = await User.findById(id);
+  const clearStats = async () => await User.updateOne({ _id: id }, { "$REMOVE": ["stats"] });
   try {
     const { summonerId, summonerName, summonerPuuid, region, queue } = dbUser;
     console.log('Analyzing data for', summonerName);
@@ -67,12 +66,9 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
     const matchTeams = [];
     const matchResults = [];
 
-    // Pause for rate limit
-    if (process.env.NODE_ENV === 'production') await new Promise(r => setTimeout(r, 2000));
-
     await Promise.all(matchIds.data.map(async (id) => {
       const currMatch = await axios.get(apiURL + id, rgapiAxiosConfig);
-      const currTeams = await parseMatchData(currMatch.data, summonerId);
+      const currTeams = parseMatchData(currMatch.data, summonerId);
       matchTeams.push(currTeams);
       const currTimeline = await axios.get(apiURL + id + '/timeline', rgapiAxiosConfig);
       const currResults = parseTimelineData(currTimeline.data, currTeams);
@@ -97,8 +93,7 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
     }
 
     console.log('Caching results for', summonerName);
-    delete dbUser.id
-    await User.update({ id }, { ...dbUser, stats });
+    await User.updateOne({ _id: id }, { stats });
     return res.sendStatus(200);
   } catch (err) {
     console.error(err.stack || err.response.data || err);

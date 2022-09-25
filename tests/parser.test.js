@@ -1,5 +1,5 @@
-const { parseMatchData, parseTimelineData } = require('../utils/parser');
-const { compareShallowObjects } = require('../utils/helpers');
+const { parseMatchData, parseTimelineData } = require('../functions/utils/parser');
+const { compareShallowObjects } = require('../functions/utils/helpers');
 const matchData = require('./exampleData/matchData');
 const timelineData = require('./exampleData/timelineData');
 const summonerId = 'LxX5R76anqiiD9zGBEJtd2Lzgg2IQUFWu6XAz6CaRE6L7ro';

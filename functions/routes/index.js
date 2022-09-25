@@ -6,18 +6,22 @@ const { User } = require('../models');
 const apiRoutes = require('./api');
 router.use('/api', apiRoutes);
 
-router.get('/', checkToken, async (req, res) => {
+router.get('*', checkToken, async (req, res) => {
   const { code, action } = req.query;
   const domain = req.get('host');
-  const redirectURL = (/elasticbeanstalk|localhost/i.test(domain) ? 'http' : 'https') + '://' + req.get('host') + '/';
+  const redirectURL =
+    /cloudfunctions.net/i.test(domain) ?
+      'https://gankbait-36ce7.web.app/' :
+      (/localhost/i.test(domain) ? 'http' : 'https')
+      + '://' + req.get('host') + '/' +
+      (/localhost/i.test(domain) ? process.env.APP_URL : '');
   const oauthURL = `https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=${encodeURIComponent(redirectURL)}&response_type=code&scope=identify`;
 
   try {
     if (req.userData && action === 'logout') {
       return res
-        .clearCookie('access_token')
-        .status(200)
-        .redirect('/');
+        .clearCookie('__session')
+        .redirect(redirectURL);
     }
 
     if (!req.userData && !code || req.query.error === 'access_denied') {
@@ -47,39 +51,30 @@ router.get('/', checkToken, async (req, res) => {
       });
       const token = generateToken(user.data);
 
-      try {
-        await User.create({ "id": user.data.id });
-        console.log('New user has logged in');
-      } catch {
-        console.log('Existing user has logged in');
-      }
+      const existingUser = await User.findById(user.data.id);
+      if (!existingUser) await User.create({ _id: user.data.id })
+      console.log((existingUser ? 'Existing' : 'New') + ' user has logged in')
 
       return res
-        .cookie('access_token', token, {
-          sameSite: 'None',
-          path: '/',
-          secure: process.env.NODE_ENV === 'production',
-        })
-        .status(200)
-        .redirect('/');
+        .set('Set-Cookie', `__session=${token}`)
+        .setHeader('Cache-Control', 'private')
+        .redirect(redirectURL);
     }
 
     const { id, username, avatar } = req.userData;
-    const dbUser = await User.get({ id });
+    const dbUser = await User.findById(id);
     const user = {
-      ...dbUser,
+      ...dbUser._doc,
       username,
       avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`,
     }
 
     return res.render('dashboard', { user, loggedIn: true });
   } catch (err) {
-    console.error(err.stack || err.response.data || err);
+    console.error(err.stack || err.response.data);
     if (err.response?.data?.error_description === 'Invalid "redirect_uri" in request.') console.info(redirectURL, oauthURL);
-    return res.redirect('/');
+    return res.redirect(redirectURL);
   }
 });
-
-router.get('*', (req, res) => res.redirect('/'));
 
 module.exports = router;

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const generateToken = ({ id, username, avatar }) => jwt.sign({ id, username, avatar }, process.env.TOKEN_SECRET);
 
 const authenticateToken = (req, res, next) => {
-  const token = req.cookies.access_token;
+  const token = req.cookies.__session;
   if (!token) {
     return res.status(403);
   }
@@ -16,7 +16,7 @@ const authenticateToken = (req, res, next) => {
 }
 
 const checkToken = (req, res, next) => {
-  const token = req.cookies.access_token;
+  const token = req.cookies.__session;
   if (token) {
     try {
       req.userData = jwt.verify(token, process.env.TOKEN_SECRET);
