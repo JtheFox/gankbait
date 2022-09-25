@@ -7,6 +7,7 @@ const apiRoutes = require('./api');
 router.use('/api', apiRoutes);
 
 router.get('*', checkToken, async (req, res) => {
+  console.log(req.cookies)
   const { code, action } = req.query;
   const domain = req.get('host');
   const redirectURL =
@@ -18,8 +19,7 @@ router.get('*', checkToken, async (req, res) => {
   try {
     if (req.userData && action === 'logout') {
       return res
-        .clearCookie('access_token')
-        .status(200)
+        .clearCookie('__session')
         .redirect(redirectURL);
     }
 
@@ -43,6 +43,7 @@ router.get('*', checkToken, async (req, res) => {
       );
 
       const { data } = tokenResponseData;
+      console.log(data)
       const user = await axios.get('https://discord.com/api/users/@me', {
         headers: {
           authorization: `${data.token_type} ${data.access_token}`,
@@ -55,12 +56,8 @@ router.get('*', checkToken, async (req, res) => {
       console.log((existingUser ? 'Existing' : 'New') + ' user has logged in')
 
       return res
-        .cookie('access_token', token, {
-          sameSite: 'None',
-          path: '/',
-          secure: process.env.NODE_ENV === 'production',
-        })
-        .status(200)
+        .set('Set-Cookie', `__session=${token}`)
+        .setHeader('Cache-Control', 'private')
         .redirect(redirectURL);
     }
 
@@ -74,9 +71,9 @@ router.get('*', checkToken, async (req, res) => {
 
     return res.render('dashboard', { user, loggedIn: true });
   } catch (err) {
-    console.error(err.stack || err.response.data || err);
+    console.error(err.stack || err.response.data);
     if (err.response?.data?.error_description === 'Invalid "redirect_uri" in request.') console.info(redirectURL, oauthURL);
-    return res.redirect('/');
+    return res.redirect(redirectURL);
   }
 });
 
