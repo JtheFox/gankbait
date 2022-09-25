@@ -1,13 +1,8 @@
-const dynamoose = require('dynamoose');
+const mongoose = require('mongoose');
 
-// Create new DynamoDB instance
-const ddb = new dynamoose.aws.ddb.DynamoDB({
-  "accessKeyId": process.env.AWS_ACCESS_KEY,
-  "secretAccessKey": process.env.AWS_SECRET_KEY,
-  "region": "us-east-1"
+mongoose.connect(process.env.DB_CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-// Set DynamoDB instance to the Dynamoose DDB instance
-dynamoose.aws.ddb.set(ddb);
-
-module.exports = dynamoose;
+module.exports = mongoose;

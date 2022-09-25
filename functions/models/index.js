@@ -1,13 +1,13 @@
-const dynamoose = require('./connection');
+const mongoose = require('./connection');
 
-const StatsSchema = new dynamoose.Schema({
+const StatsSchema = new mongoose.Schema({
   "games": Number,
   "killsFromGanks": Number,
   "deathsFromGanks": Number
 })
 
-const UserSchema = new dynamoose.Schema({
-  "id": {
+const UserSchema = new mongoose.Schema({
+  "_id": {
     type: String,
     required: true
   },
@@ -17,22 +17,13 @@ const UserSchema = new dynamoose.Schema({
   "region": String,
   "queue": String,
   "stats": {
-    type: Object,
-    schema: {
-      "summonerName": String,
-      "lane": {
-        type: Object,
-        schema: StatsSchema
-      },
-      "jungle": {
-        type: Object,
-        schema: StatsSchema
-      }
-    }
+    "summonerName": String,
+    "lane": StatsSchema,
+    "jungle": StatsSchema
   }
 });
 
-const User = dynamoose.model("GbUser", UserSchema);
+const User = mongoose.model("GbUser", UserSchema);
 
 module.exports = { User };
 
