@@ -66,9 +66,6 @@ router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res
     const matchTeams = [];
     const matchResults = [];
 
-    // Pause for rate limit
-    if (process.env.NODE_ENV === 'production') await new Promise(r => setTimeout(r, 2000));
-
     await Promise.all(matchIds.data.map(async (id) => {
       const currMatch = await axios.get(apiURL + id, rgapiAxiosConfig);
       const currTeams = parseMatchData(currMatch.data, summonerId);

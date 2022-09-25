@@ -64,7 +64,7 @@ router.get('*', checkToken, async (req, res) => {
     const { id, username, avatar } = req.userData;
     const dbUser = await User.findById(id);
     const user = {
-      ...dbUser,
+      ...dbUser._doc,
       username,
       avatar: `https://cdn.discordapp.com/avatars/${id}/${avatar}`,
     }
