@@ -7,7 +7,6 @@ const apiRoutes = require('./api');
 router.use('/api', apiRoutes);
 
 router.get('*', checkToken, async (req, res) => {
-  console.log(req.cookies)
   const { code, action } = req.query;
   const domain = req.get('host');
   const redirectURL =
@@ -43,7 +42,6 @@ router.get('*', checkToken, async (req, res) => {
       );
 
       const { data } = tokenResponseData;
-      console.log(data)
       const user = await axios.get('https://discord.com/api/users/@me', {
         headers: {
           authorization: `${data.token_type} ${data.access_token}`,

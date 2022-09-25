@@ -2,7 +2,6 @@
   "name": "gankbait",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
   "scripts": {
     "test": "jest"
   },
@@ -17,18 +16,6 @@
     "url": "https://github.com/JtheFox/gankbait/issues"
   },
   "homepage": "https://github.com/JtheFox/gankbait#readme",
-  "dependencies": {
-    "axios": "^0.27.2",
-    "cookie-parser": "^1.4.6",
-    "dotenv": "^16.0.2",
-    "express": "^4.18.1",
-    "express-rate-limit": "^6.6.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.6.1",
-    "point-in-polygon": "^1.1.0",
-    "pug": "^3.0.2",
-    "serve-favicon": "^2.5.0"
-  },
   "devDependencies": {
     "jest": "^29.0.3"
   }
