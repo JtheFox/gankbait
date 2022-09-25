@@ -10,9 +10,11 @@ router.get('*', checkToken, async (req, res) => {
   const { code, action } = req.query;
   const domain = req.get('host');
   const redirectURL =
-    (/localhost/i.test(domain) ? 'http' : 'https')
-    + '://' + req.get('host') + '/' +
-    (/localhost/i.test(domain) ? process.env.APP_URL : '');
+    /cloudfunctions.net/i.test(domain) ?
+      'https://gankbait-36ce7.web.app/' :
+      (/localhost/i.test(domain) ? 'http' : 'https')
+      + '://' + req.get('host') + '/' +
+      (/localhost/i.test(domain) ? process.env.APP_URL : '');
   const oauthURL = `https://discord.com/api/oauth2/authorize?client_id=1016791443739779072&redirect_uri=${encodeURIComponent(redirectURL)}&response_type=code&scope=identify`;
 
   try {
