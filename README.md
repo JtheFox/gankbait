@@ -6,9 +6,10 @@
 ![Pug](https://img.shields.io/badge/Pug-FFF?style=for-the-badge&logo=pug&logoColor=A86454)
 ![Bulma](https://img.shields.io/badge/bulma-00D0B1?style=for-the-badge&logo=bulma&logoColor=white)
 ![Riot Games](https://img.shields.io/badge/riotgames-D32936.svg?style=for-the-badge&logo=riotgames&logoColor=white)
-![AmazonDynamoDB](https://img.shields.io/badge/Amazon%20DynamoDB-4053D6?style=for-the-badge&logo=Amazon%20DynamoDB&logoColor=white)
+![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 
-## 🔗 [Live Site](https://frightened-hat-colt.cyclic.app/)
+## 🔗 [Live Site](https://gankbait-36ce7.web.app/)
 
 ### Table of Contents
 1. [Motivation](#motivation)
@@ -31,8 +32,8 @@ Gankbait is a single-page application that utilizes the [Riot API](https://devel
 - State management in Vanilla JavaScript for managing display
 - REST API for processing data requests
 - Third-Party API integration for retrieving player data
-- [DynamoDB](https://aws.amazon.com/dynamodb/) for storing user data
-- [Dynamoose](https://dynamoosejs.com/) for DynamoDB Object Data Modeling
+- [DynamoDB](https://www.mongodb.com/) for storing user data
+- [Dynamoose](https://mongoosejs.com/) for MongoDB Object Document Modeling
 
 ## Mock Up
 ![Gankbait landing page](./assets/landing-page.png)<br>
