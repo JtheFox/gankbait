@@ -1,12 +1,12 @@
+require('dotenv').config();
+const functions = require("firebase-functions");
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
 
 const routes = require('./routes');
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.set('views', './views');
 app.set('view engine', 'pug');
@@ -19,6 +19,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(routes);
 
-app.listen(port, function () {
-  console.log('Now listening at', process.env.NODE_ENV === 'production' ? `port ${port}` : `http://localhost:${port}`);
-});
+exports.app = functions.https.onRequest(app);
