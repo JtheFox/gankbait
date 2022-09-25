@@ -1,7 +1,6 @@
-const dd = require('./ddrag');
 const pointIn = require('point-in-polygon');
 
-const parseMatchData = async ({ info }, summonerId) => {
+const parseMatchData = ({ info }, summonerId) => {
   const teams = {
     blue: {
       win: false,
@@ -17,7 +16,7 @@ const parseMatchData = async ({ info }, summonerId) => {
   teams['blue'].win = outcome;
   teams['red'].win = !outcome;
 
-  for await (let p of info.participants) {
+  for (let p of info.participants) {
     const getPosition = ({ teamPosition }) => {
       switch (teamPosition) {
         case 'TOP': return [1, 'TOP'];
@@ -41,7 +40,7 @@ const parseMatchData = async ({ info }, summonerId) => {
       summoner: p.summonerName,
       puuid: p.puuid,
       champion: p.championName,
-      icon: await dd.getChampionAvatar(p.championId),
+      icon: `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${p.championId}.png`,
       kills: p.kills,
       deaths: p.deaths,
       assists: p.assists,
