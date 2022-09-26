@@ -32,8 +32,8 @@ Gankbait is a single-page application that utilizes the [Riot API](https://devel
 - State management in Vanilla JavaScript for managing display
 - REST API for processing data requests
 - Third-Party API integration for retrieving player data
-- [DynamoDB](https://www.mongodb.com/) for storing user data
-- [Dynamoose](https://mongoosejs.com/) for MongoDB Object Document Modeling
+- [MongoDB](https://www.mongodb.com/) for storing user data
+- [Mongoose](https://mongoosejs.com/) for MongoDB Object Document Modeling
 
 ## Mock Up
 ![Gankbait landing page](./assets/landing-page.png)<br>
