@@ -4,8 +4,6 @@ const rateLimit = require('express-rate-limit');
 const { authenticateToken } = require('../../utils/auth');
 const { parseMatchData, parseTimelineData } = require('../../utils/parser');
 const { User } = require('../../models');
-const seasonalRoutes = require('./seasonal');
-router.use('/seasonal', seasonalRoutes);
 const rgapiAxiosConfig = { headers: { 'X-Riot-Token': process.env.RIOT_API_KEY } };
 const apiLimiter = rateLimit({
   windowMs: 10 * 1000,
