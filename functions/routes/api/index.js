@@ -4,6 +4,8 @@ const rateLimit = require('express-rate-limit');
 const { authenticateToken } = require('../../utils/auth');
 const { parseMatchData, parseTimelineData } = require('../../utils/parser');
 const { User } = require('../../models');
+const seasonalRoutes = require('./seasonal');
+router.use('/seasonal', seasonalRoutes);
 const rgapiAxiosConfig = { headers: { 'X-Riot-Token': process.env.RIOT_API_KEY } };
 const apiLimiter = rateLimit({
   windowMs: 10 * 1000,
@@ -38,17 +40,14 @@ router.put('/summoner', authenticateToken, async ({ userData, body }, res) => {
 
 router.get('/matches', [authenticateToken, apiLimiter], async ({ userData }, res) => {
   const { id } = userData;
-  const regionRoute = (region) => {
-    switch (region) {
-      case 'na1':
-      case 'br1': return 'americas';
-      case 'euw1':
-      case 'eun1': return 'europe';
-      case 'kr':
-      case 'jp1': return 'asia';
-      default: return 'sea'
-    }
-  }
+  const regionRoute = (code) =>
+    ['na', 'lan', 'las', 'br'].includes(code)
+      ? 'americas'
+      : ['eune', 'euw', 'tr', 'ru'].includes(code)
+        ? 'europe'
+        : ['kr', 'jp'].includes(code)
+          ? 'asia'
+          : 'sea'
 
   const dbUser = await User.findById(id);
   const clearStats = async () => await User.updateOne({ _id: id }, { "$REMOVE": ["stats"] });
