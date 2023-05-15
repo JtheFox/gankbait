@@ -4,7 +4,7 @@ html
   head
     meta(charset="UTF-8")
     meta(name="description" content="Analyze your League of Legends normal or ranked match history to see how you do with handling ganks")
-    title Gankbait
+    title Lanefo
     block styles
       link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css")
       link(rel="stylesheet" href="/style.css")
@@ -14,7 +14,7 @@ html
     block head 
       header(class="navbar has-background-light px-4 py-2")
         .navbar-brand
-          h1(class="title is-2") Gankbait 
+          h1(class="title is-2") Lanefo 
         .navbar-end
           if loggedIn 
             div(class="navbar-item mr-2")
@@ -41,7 +41,7 @@ html
             a(class="modal-trigger" data-target="faq-modal") Troubleshooting
             +spacer 
             a(class="modal-trigger" data-target="privacy-modal") Why Discord login?
-          p.mt-3 #[a(href="https://github.com/JtheFox/gankbait") Source Code] | #[strong(class="has-text-weight-semibold") Gankbait] &copy; 2022 by #[a(href="https://github.com/JtheFox") Jason Fox]
+          p.mt-3 #[a(href="https://github.com/JtheFox/lanefo") Source Code] | #[strong(class="has-text-weight-semibold") Lanefo] &copy; 2022 by #[a(href="https://github.com/JtheFox") Jason Fox]
 
     mixin semibold(text)
       span.has-text-weight-semibold= text
@@ -52,12 +52,12 @@ html
       .modal-background
       .modal-card 
         header.modal-card-head 
-          p.modal-card-title About Gankbait
+          p.modal-card-title About Lanefo
           button(class="delete" aria-label="close")
         article.modal-card-body
           div.mb-4
             p.is-size-4 What does it do?
-            p Gankbait is an application designed to analyze data from (up to) the last 20 games of a player's #[span.keyword normal]/#[span.keyword ranked] League of Legends match history. The goal is to determine the player's #[span.keyword kills/deaths] resulting from #[span.keyword enemy ganks during laning phase]. Kills in this case includes both final blows and assists.
+            p Lanefo is an application designed to analyze data from (up to) the last 20 games of a player's #[span.keyword normal]/#[span.keyword ranked] League of Legends match history. The goal is to determine the player's #[span.keyword kills/deaths] resulting from #[span.keyword enemy ganks during laning phase]. Kills in this case includes both final blows and assists.
             small #[+semibold('Enemy Gank')]: A kill/death taking place in the physical region of a lane involving a non-lane opponent enemy. This is considered differently for junglers.
             br
             small #[+semibold('Laning Phase')]: The first 15 minutes of the game.
@@ -91,7 +91,7 @@ html
             p This most likely means the site is picking up in traffic! Unfortunately, for now, you will have to wait a minute and try again. 
           div.mb-4
             p.is-size-4 Having issues not listed here?
-            p If you are experiencing an issue not covered here, I would love to hear about it so I can fix it! Submit an issue for the site on GitHub by #[a(href="https://github.com/JtheFox/gankbait/issues/new" target="_blank") clicking here]. Make sure to include a good title and be as descriptive as possible.
+            p If you are experiencing an issue not covered here, I would love to hear about it so I can fix it! Submit an issue for the site on GitHub by #[a(href="https://github.com/JtheFox/lanefo/issues/new" target="_blank") clicking here]. Make sure to include a good title and be as descriptive as possible.
 
     section.modal#privacy-modal 
       .modal-background

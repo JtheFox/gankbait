@@ -1,5 +1,5 @@
 {
-  "name": "gankbait",
+  "name": "lanefo",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -7,15 +7,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JtheFox/gankbait.git"
+    "url": "git+https://github.com/JtheFox/lanefo.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/JtheFox/gankbait/issues"
+    "url": "https://github.com/JtheFox/lanefo/issues"
   },
-  "homepage": "https://github.com/JtheFox/gankbait#readme",
+  "homepage": "https://github.com/JtheFox/lanefo#readme",
   "devDependencies": {
     "jest": "^29.0.3"
   },
